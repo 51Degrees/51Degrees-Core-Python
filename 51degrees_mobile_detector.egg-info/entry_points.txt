@@ -1,0 +1,3 @@
+[console_scripts]
+51degrees-mobile-detector = fiftyone_degrees.mobile_detector.runner:main
+
