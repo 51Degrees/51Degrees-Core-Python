@@ -112,7 +112,7 @@ class _WrapperMatcher(_Matcher):
         if csv:
             for prop in csv.split('\n'):
                 if prop:
-                    index = prop.find('|')
+                    index = prop.find(',')
                     if index > 0:
                         result.set_property(prop[0:index], prop[index+1:])
 
@@ -138,6 +138,58 @@ class _PremiumPatternWrapperMatcher(_WrapperMatcher):
             '_fiftyone_degrees_mobile_detector_premium_pattern_wrapper',
             '51degrees-mobile-detector-premium-pattern-wrapper')
         self._module.init('|'.join(settings.PROPERTIES))
+
+class _V3WrapperMatcher(_WrapperMatcher):
+    ID = 'v3-wrapper'
+
+    def __init__(self):
+        super(_V3WrapperMatcher, self).__init__(
+            '_fiftyone_degrees_mobile_detector_v3_wrapper',
+			'51degrees-mobile-detector-v3-wrapper')
+        if settings.V3_WRAPPER_DATABASE:
+            try:
+                # Does the database file exists and is it readable?
+                with open(settings.V3_WRAPPER_DATABASE):
+                    pass
+            except IOError:
+                raise Exception(
+                    'The provided detection database file (%s) does not '
+                    'exist or is not readable. Please, '
+                    'check your settings.' % settings.V3_WRAPPER_DATABASE)
+            else:
+                self._module.init(
+                    settings.V3_WRAPPER_DATABASE,
+                    '|'.join(settings.PROPERTIES))
+        else:
+            raise Exception(
+                'Trie-based detection method depends on an external '
+                'database file. Please, check your settings.')
+
+class _V3TrieWrapperMatcher(_WrapperMatcher):
+    ID = 'v3-trie-wrapper'
+
+    def __init__(self):
+        super(_V3TrieWrapperMatcher, self).__init__(
+            '_fiftyone_degrees_mobile_detector_v3_trie_wrapper',
+			'51degrees-mobile-detector-v3-trie-wrapper')
+        if settings.V3_TRIE_WRAPPER_DATABASE:
+            try:
+                # Does the database file exists and is it readable?
+                with open(settings.V3_TRIE_WRAPPER_DATABASE):
+                    pass
+            except IOError:
+                raise Exception(
+                    'The provided detection database file (%s) does not '
+                    'exist or is not readable. Please, '
+                    'check your settings.' % settings.V3_TRIE_WRAPPER_DATABASE)
+            else:
+                self._module.init(
+                    settings.V3_TRIE_WRAPPER_DATABASE,
+                    '|'.join(settings.PROPERTIES))
+        else:
+            raise Exception(
+                'Trie-based detection method depends on an external '
+                'database file. Please, check your settings.')
 
 
 class _TrieWrapperMatcher(_WrapperMatcher):
@@ -168,7 +220,7 @@ class _TrieWrapperMatcher(_WrapperMatcher):
 
 
 # Register matching methods.
-for klass in [_LitePatternWrapperMatcher, _PremiumPatternWrapperMatcher, _TrieWrapperMatcher]:
+for klass in [_LitePatternWrapperMatcher, _PremiumPatternWrapperMatcher, _TrieWrapperMatcher, _V3WrapperMatcher, _V3TrieWrapperMatcher]:
     _Matcher.register(klass.ID, klass)
 
 
