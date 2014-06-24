@@ -24,9 +24,8 @@ from __future__ import absolute_import
 
 # Sets the preferred mobile device detection method. Available options are:
 #
-#   - 'lite-pattern-wrapper': Requires '51degrees-mobile-detector-lite-pattern-wrapper' package.
-#   - 'premium-pattern-wrapper': Requires '51degrees-mobile-detector-premium-pattern-wrapper' package.
-#   - 'trie-wrapper': Requires '51degrees-mobile-detector-trie-wrapper' package.
+#   - 'v3-wrapper': Requires '51degrees-mobile-detector-v3-wrapper' package.
+#   - 'v3-trie-wrapper': Requires '51degrees-mobile-detector-v3-trie-wrapper' package.
 #
 DETECTION_METHOD = 'v3-wrapper'
 
@@ -35,7 +34,7 @@ DETECTION_METHOD = 'v3-wrapper'
 PROPERTIES = ()
 
 # Your 51Degrees license key. This is required if you want to set up the automatic
-# 51degrees-mobile-detector-premium-pattern-wrapper package updates.
+# data file updates.
 LICENSE = ''
 
 ###############################################################################
@@ -43,18 +42,18 @@ LICENSE = ''
 ###############################################################################
 
 # Location of the database file. If not specified, the trie-based detection
-# method will not be available. Download the latest 51Degrees.mobi-Lite-*.trie.zip
+# method will not be available. Download the latest 51Degrees.com-Lite-*.trie.zip
 # file from http://sourceforge.net/projects/fiftyone-c/files/.
-TRIE_WRAPPER_DATABASE = '/path/to/51Degrees.mobi-Lite.trie.dat'
+V3_TRIE_WRAPPER_DATABASE = '51Degrees.trie'
 
 ###############################################################################
 ## V3 DETECTOR (C WRAPPER) SETTINGS.
 ###############################################################################
 
 # Location of the database file. If not specified, the trie-based detection
-# method will not be available. Download the latest 51Degrees lite
+# method will not be available. Download the latest 51Degrees.mobi-Lite-*.trie.zip
 # file from http://sourceforge.net/projects/fiftyone-c/files/.
-V3_WRAPPER_DATABASE = '/home/fiftyone/51Degrees.dat'
+V3_WRAPPER_DATABASE = '51Degrees-Lite.dat'
 
 ###############################################################################
 ## USAGE SHARER SETTINGS.
@@ -71,7 +70,7 @@ USAGE_SHARER_MAXIMUM_DETAIL = True
 
 # URL to send new device data to.
 # Modification not required for most users.
-USAGE_SHARER_SUBMISSION_URL = 'http://devices.51degrees.mobi/new.ashx'
+USAGE_SHARER_SUBMISSION_URL = 'http://devices.51degrees.com/new.ashx'
 
 # Data submission timeout (seconds).
 USAGE_SHARER_SUBMISSION_TIMEOUT = 10
