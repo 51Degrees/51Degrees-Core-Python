@@ -31,18 +31,19 @@ def match(args, help):
 def update_premium_pattern_wrapper(args, help):
     import tempfile
     import urllib2
+    import gzip
     from fiftyone_degrees.mobile_detector.conf import settings
+    sys.stdout.write('Starting Update \n')
 
     if settings.LICENSE:
         # Build source URL.
-        url = 'https://51degrees.mobi/Products/Downloads/Premium.aspx?LicenseKeys=%s&Type=Python&Download=True' % (
+        url = 'https://51degrees.com/Products/Downloads/Premium.aspx?LicenseKeys=%s&Type=BinaryV3&Download=True' % (
             settings.LICENSE
         )
 
-        # Download & install package.
         with tempfile.NamedTemporaryFile(
-                suffix='.tar.gz',
-                prefix='51Degrees-premium-pattern-wrapper-',
+                suffix='.dat.gz',
+                prefix='51d_temp',
                 delete=False) as fh:
             delete = True
             try:
@@ -66,33 +67,43 @@ def update_premium_pattern_wrapper(args, help):
                             print status,
                         else:
                             break
-                    fh.close()
+                    #Done with temporary file. Close it.
+                    if not fh.closed:
+                        fh.close()
+                    
+                    #Open zipped file.
+                    f_name = fh.name
+                    zipped_file = gzip.open(f_name,"rb")
+                    #Open temporary file to store unzipped content.
+                    unzipped_file = open("unzipped_temp.dat", "wb")
+                    #Unarchive content to temporary file.
+                    unzipped_file.write(zipped_file.read())
+                    #Close and remove compressed file.
+                    zipped_file.close()
+                    os.remove(f_name)
+                    #Copy unzipped file to the file used for detection.
+                    path = settings.V3_WRAPPER_DATABASE
+                    shutil.copy2("unzipped_temp.dat", path)
+                    
+                    
+                    #clean-up
+                    if not zipped_file.closed:
+                        zipped_file.close()
+                    if not unzipped_file.closed:
+                        unzipped_file.close()
+                    
+                    sys.stdout.write("\n Update was successfull \n")
 
-                    # Try to update the package.
-                    sys.stdout.write('\n=> Updating the package...\n')
-                    updated = False
-                    try:
-                        updated = (subprocess.call('pip install "%s" --upgrade' % fh.name, shell=True) == 0)
-                    except:
-                        pass
-                    finally:
-                        if updated:
-                            sys.stdout.write('=> The package has  been successfully updated!\n')
-                        else:
-                            delete = False
-                            sys.stderr.write(
-                                'Failed to update the package. The downloaded package has been stored in %s.\n' % fh.name)
+                    #End of try to update package.
                 else:
                     sys.stderr.write('Failed to download the package: is your license key expired?\n')
             except Exception as e:
                 sys.stderr.write('Failed to download the package: %s.\n' % unicode(e))
             finally:
-                # Delete temporary file.
-                if delete:
-                    try:
-                        os.remove(fh.name)
-                    except:
-                        pass
+                try:
+                    os.remove(fh)
+                except:
+                    pass
     else:
         sys.stderr.write('Failed to download the package: you need a license key. Please, check you settings.\n')
 
