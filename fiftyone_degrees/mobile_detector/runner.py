@@ -32,6 +32,7 @@ def update_premium_pattern_wrapper(args, help):
     import tempfile
     import urllib2
     import gzip
+    import shutil
     from fiftyone_degrees.mobile_detector.conf import settings
     sys.stdout.write('Starting Update \n')
 
@@ -70,10 +71,10 @@ def update_premium_pattern_wrapper(args, help):
                     #Done with temporary file. Close it.
                     if not fh.closed:
                         fh.close()
-                    
+
                     #Open zipped file.
                     f_name = fh.name
-                    zipped_file = gzip.open(f_name,"rb")
+                    zipped_file = gzip.open(f_name, "rb")
                     #Open temporary file to store unzipped content.
                     unzipped_file = open("unzipped_temp.dat", "wb")
                     #Unarchive content to temporary file.
@@ -84,14 +85,13 @@ def update_premium_pattern_wrapper(args, help):
                     #Copy unzipped file to the file used for detection.
                     path = settings.V3_WRAPPER_DATABASE
                     shutil.copy2("unzipped_temp.dat", path)
-                    
-                    
+
                     #clean-up
                     if not zipped_file.closed:
                         zipped_file.close()
                     if not unzipped_file.closed:
                         unzipped_file.close()
-                    
+
                     sys.stdout.write("\n Update was successfull \n")
 
                     #End of try to update package.
