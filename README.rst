@@ -1,6 +1,8 @@
 Overview
 ========
 
+Please note that this repository is no longer actively maintained. Instead, please use the C-Extension which can be found here: <https://github.com/51Degrees/Device-Detection/tree/master/python>
+
 51Degrees.mobi Mobile Detector for Python (>= 2.6) allows fetching properties of mobile devices based on user agent strings. Several detection methods are available. Choose your preferred method and start supporting mobile devices in your website. The solution can be combined with emerging methodologies such as responsive design or progressive enhancement to produce great results quickly.
 
 A middleware and a context processor are also available for Django users. Enable the 51Degrees.mobi Mobile Detector middleware and access properties of client devices directly through the ``device`` property in the ``Request`` instance.
